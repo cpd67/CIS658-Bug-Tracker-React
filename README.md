@@ -7,3 +7,5 @@ To run locally:
 2). Run `yarn start`.
 
 This will start the dev server at localhost:3000.
+
+This project was bootstrapped by create-react-app.
