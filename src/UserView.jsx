@@ -9,7 +9,7 @@ export const UserView = props => {
         { id: 1, fname: "Bobby", lname: "Tables", email: "test@test.com", thumbnail: "test.jpg"}
     ]);
     let [formMode, setFormMode] = React.useState('new');
-    let defaultUser = {id: '', fname: '', lname: '', email: '', thumbnail: ''};
+    let defaultUser = {id: -1, fname: '', lname: '', email: '', thumbnail: ''};
     let [currentUser, setCurrentUser] = React.useState(defaultUser);
 
     let fetchUsers = () => {
@@ -46,6 +46,7 @@ export const UserView = props => {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
+                'Content-Type': 'application/json;charset=UTF-8'
             },
             body: JSON.stringify(user)
         };
@@ -57,9 +58,6 @@ export const UserView = props => {
     let deleteUser = user_id => {
         const opts = {
             method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-            },
         };
         return fetch(`${apiURL}/users/${user_id}`, opts).then(res => {
             return res.text();
@@ -80,10 +78,14 @@ export const UserView = props => {
         } else {
             // Updating a User
             editUser(currentUser).then(data => {
-                let newUserList = [...userList];
-                let userIndex = userList.findIndex((user) => user.id === currentUser.id);
-                newUserList[userIndex] = currentUser;
-                setUserList(newUserList);
+                if(!data) {
+                    let newUserList = [...userList];
+                    let userIndex = userList.findIndex((user) => user.id === currentUser.id);
+                    newUserList[userIndex] = currentUser;
+                    setUserList(newUserList);    
+                } else {
+                    console.log("Failed to update User because: " + data);
+                }
             });
         }
     }
